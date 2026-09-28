@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#164c3c" />
+  <title>DonateHub | Donation operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="DonateHub home">
+        <span class="brand-mark">D</span>
+        <span>Donate<span class="brand-light">Hub</span></span>
+      </a>
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="navigation" aria-label="Main navigation">
+        <button class="nav-btn active" data-section="dashboard">Overview</button>
+        <button class="nav-btn" data-section="drives">Donation drives</button>
+        <button class="nav-btn" data-section="donors">Donors</button>
+        <button class="nav-btn" data-section="items">Inventory</button>
+        <button class="nav-btn" data-section="recipients">Recipients</button>
+        <button class="nav-btn" data-section="distributions">Distributions</button>
+      </nav>
+      <div class="sidebar-foot"><span class="status-dot"></span> Local workspace</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">COMMUNITY DONATION MANAGEMENT</p>
+          <h1 id="pageTitle">Overview</h1>
+        </div>
+        <div class="connection-state"><span class="status-dot"></span> Connected to DonateHub</div>
+      </header>
+
+      <section class="section active" id="dashboard">
+        <div class="welcome-band">
+          <div><p class="eyebrow">DONATION HUB</p><h2>Our aim is to provide quality service to our community.</h2></div>
+          <span class="welcome-date" id="todayLabel"></span>
+        </div>
+        <div class="stats-grid" id="statsGrid"><p class="loading">Loading overview...</p></div>
+        <div class="dashboard-grid">
+          <section class="content-block">
+            <div class="block-heading"><div><p class="eyebrow">LATEST ACTIVITY</p><h2>Donation totals</h2></div></div>
+            <div class="table-wrap" id="summaryTable"></div>
+          </section>
+          <section class="content-block stock-block">
+            <div class="block-heading"><div><p class="eyebrow">INVENTORY</p><h2>Unassigned stock</h2></div></div>
+            <div class="table-wrap" id="stockTable"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="section" id="drives">
+        <div class="section-intro"><div><p class="eyebrow">PLAN AND TRACK</p><h2>Donation drives</h2></div><p>Organize collection periods and keep each campaign in view.</p></div>
+        <section class="content-block form-block"><h3 class="form-title">Drive details</h3>
+          <form id="driveForm" class="entity-form form-grid">
+            <input type="hidden" id="driveId" />
+            <label>Drive name<input id="driveName" maxlength="255" required placeholder="Winter essentials drive" /></label>
+            <label>Description<input id="driveDescription" maxlength="500" placeholder="Optional details" /></label>
+            <label>Start date<input id="driveStartDate" type="date" required /></label>
+            <label>End date<input id="driveEndDate" type="date" required /></label>
+            <label>Status<select id="driveStatus"><option>ACTIVE</option><option>COMPLETED</option><option>PAUSED</option></select></label>
+            <div class="form-actions"><button type="submit">Save drive</button><button type="reset" class="secondary">Clear</button></div>
+          </form>
+        </section>
+        <section class="content-block"><div class="block-heading"><div><p class="eyebrow">CAMPAIGNS</p><h2>All drives</h2></div></div><div class="table-wrap" id="driveTable"></div></section>
+      </section>
+
+      <section class="section" id="donors">
+        <div class="section-intro"><div><p class="eyebrow">PEOPLE WHO GIVE</p><h2>Donors</h2></div><p>Keep contact details together with every recorded contribution.</p></div>
+        <section class="content-block form-block"><h3 class="form-title">Donor details</h3>
+          <form id="donorForm" class="entity-form form-grid">
+            <input type="hidden" id="donorId" />
+            <label>Full name<input id="donorName" maxlength="255" required /></label>
+            <label>Email<input id="donorEmail" type="email" maxlength="255" required /></label>
+            <label>Phone<input id="donorPhone" type="tel" maxlength="50" required /></label>
+            <div class="form-actions"><button type="submit">Save donor</button><button type="reset" class="secondary">Clear</button></div>
+          </form>
+        </section>
+        <section class="content-block"><div class="block-heading"><div><p class="eyebrow">CONTACTS</p><h2>Donor directory</h2></div></div><div class="table-wrap" id="donorTable"></div></section>
+      </section>
+
+      <section class="section" id="items">
+        <div class="section-intro"><div><p class="eyebrow">BOOKS AND CLOTHING</p><h2>Donation inventory</h2></div><p>Log items against a donor and an active drive.</p></div>
+        <section class="content-block form-block"><h3 class="form-title">Log a donation</h3>
+          <form id="itemForm" class="entity-form form-grid">
+            <input type="hidden" id="itemId" />
+            <label>Category<select id="itemCategory" required><option value="BOOK">Book</option><option value="CLOTH">Clothing</option></select></label>
+            <label>Condition<select id="itemCondition" required><option value="NEW">New</option><option value="GOOD">Good</option><option value="WORN">Worn</option></select></label>
+            <label>Donor<select id="itemDonorId" required><option value="">Select donor</option></select></label>
+            <label>Donation drive<select id="itemDriveId" required><option value="">Select drive</option></select></label>
+            <label>Date received<input id="itemDate" type="date" required /></label>
+            <p class="form-note" id="itemPrerequisiteNote" aria-live="polite" hidden></p>
+            <div class="form-actions"><button id="saveItemButton" type="submit">Save donation</button><button type="reset" class="secondary">Clear</button></div>
+          </form>
+        </section>
+        <section class="content-block"><div class="block-heading filter-heading"><div><p class="eyebrow">RECEIVED ITEMS</p><h2>All inventory</h2></div><label class="filter-control">Category<select id="itemCategoryFilter"><option value="">All categories</option><option value="BOOK">Books</option><option value="CLOTH">Clothing</option></select></label><button id="itemFilterBtn" class="secondary" type="button">Filter</button></div><div class="table-wrap" id="itemTable"></div></section>
+      </section>
+
+      <section class="section" id="recipients">
+        <div class="section-intro"><div><p class="eyebrow">COMMUNITY PARTNERS</p><h2>Recipients</h2></div><p>Maintain organizations and delivery contacts for distributions.</p></div>
+        <section class="content-block form-block"><h3 class="form-title">Recipient details</h3>
+          <form id="recipientForm" class="entity-form form-grid">
+            <input type="hidden" id="recipientId" />
+            <label>Contact name<input id="recipientName" maxlength="255" required /></label>
+            <label>Organization<input id="recipientOrganization" maxlength="255" required /></label>
+            <label>Address<input id="recipientAddress" maxlength="255" required /></label>
+            <label>Phone<input id="recipientPhone" type="tel" maxlength="50" /></label>
+            <div class="form-actions"><button type="submit">Save recipient</button><button type="reset" class="secondary">Clear</button></div>
+          </form>
+        </section>
+        <section class="content-block"><div class="block-heading"><div><p class="eyebrow">DIRECTORY</p><h2>Recipient organizations</h2></div></div><div class="table-wrap" id="recipientTable"></div></section>
+      </section>
+
+      <section class="section" id="distributions">
+        <div class="section-intro"><div><p class="eyebrow">GETTING DONATIONS THERE</p><h2>Distributions</h2></div><p>Record collected items as they are delivered to a recipient organization.</p></div>
+        <section class="content-block form-block"><h3 class="form-title">Record a distribution</h3>
+          <form id="distributionForm" class="entity-form form-grid">
+            <label>Collected item<select id="distributionItemId" required><option value="">Select item</option></select></label>
+            <label>Recipient<select id="distributionRecipientId" required><option value="">Select recipient</option></select></label>
+            <div class="form-actions"><button type="submit">Record distribution</button><button type="reset" class="secondary">Clear</button></div>
+          </form>
+        </section>
+        <section class="content-block"><div class="block-heading"><div><p class="eyebrow">DELIVERY HISTORY</p><h2>Recorded distributions</h2></div></div><div class="table-wrap" id="distributionTable"></div></section>
+      </section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/drives.js"></script>
+  <script src="/js/donors.js"></script>
+  <script src="/js/items.js"></script>
+  <script src="/js/recipients.js"></script>
+  <script src="/js/distributions.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
